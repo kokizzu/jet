@@ -11,6 +11,6 @@ require (
 	github.com/lib/pq v1.10.5
 	github.com/mattn/go-sqlite3 v1.14.8
 	github.com/pkg/profile v1.5.0 //tests
-	github.com/shopspring/decimal v1.2.0 // tests
+	github.com/shopspring/decimal v1.3.1 // tests
 	github.com/stretchr/testify v1.7.0 // tests
 )
