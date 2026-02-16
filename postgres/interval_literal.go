@@ -42,6 +42,7 @@ func INTERVAL(quantityAndUnit ...quantityAndUnit) IntervalExpression {
 
 	for i := 0; i < len(quantityAndUnit); i += 2 {
 		quantity := strconv.FormatFloat(quantityAndUnit[i], 'f', -1, 64)
+		// #nosec G602 -- false positive guarded by even-length check above and i+1 < n in loop
 		unitString := unitToString(quantityAndUnit[i+1])
 		fields = append(fields, quantity+" "+unitString)
 	}
