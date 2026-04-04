@@ -1062,6 +1062,8 @@ LIMIT $38;
 }
 
 func TestUInt64Overflow(t *testing.T) {
+	skipForCockroachDB(t)
+
 	stmt := AllTypes.INSERT(AllTypes.BigInt).
 		VALUES(Uint64(math.MaxUint64))
 
