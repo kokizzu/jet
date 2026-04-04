@@ -156,8 +156,8 @@ jobs:
             go run ./init/init.go -testsuite cockroach        
 
       # run mariaDB and cockroachdb tests. No need to collect coverage, because coverage is already included with mysql and postgres tests
-      - run: MY_SQL_SOURCE=MariaDB go test -v  ./tests/mysql/
-      - run: PG_SOURCE=COCKROACH_DB go test -v ./tests/postgres/
+      - run: cd tests && MY_SQL_SOURCE=MariaDB go test -v ./mysql/
+      - run: cd tests && PG_SOURCE=COCKROACH_DB go test -v ./postgres/
 
       - save_cache:
           key: go-mod-v4-{{ checksum "go.sum" }}
