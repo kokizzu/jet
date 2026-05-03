@@ -913,6 +913,8 @@ func getRowLockTestData() map[RowLock]string {
 }
 
 func TestRowLock(t *testing.T) {
+	skipForMariaDB(t)
+
 	expectedSQL := `
 SELECT *
 FROM dvds.address
