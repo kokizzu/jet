@@ -142,7 +142,27 @@ jobs:
 
       - run:
           name: Running tests
-          command:  gotestsum --junitfile $TEST_RESULTS/report.xml --format testname   -- -tags postgres -coverprofile=cover.out  -covermode=atomic -coverpkg=github.com/go-jet/jet/v2/postgres/...,github.com/go-jet/jet/v2/mysql/...,github.com/go-jet/jet/v2/sqlite/...,github.com/go-jet/jet/v2/qrm/...,github.com/go-jet/jet/v2/generator/...,github.com/go-jet/jet/v2/internal/...,github.com/go-jet/jet/v2/stmtcache/... ./...
+          command: |
+            COVERPKG="github.com/go-jet/jet/v2/postgres/...,github.com/go-jet/jet/v2/mysql/...,github.com/go-jet/jet/v2/sqlite/...,github.com/go-jet/jet/v2/qrm/...,github.com/go-jet/jet/v2/generator/...,github.com/go-jet/jet/v2/internal/...,github.com/go-jet/jet/v2/stmtcache/..."
+
+            gotestsum --junitfile $TEST_RESULTS/root-report.xml --format testname -- \
+              -coverprofile=root-cover.out \
+              -covermode=atomic \
+              -coverpkg="$COVERPKG" \
+              ./...
+
+            cd tests
+            gotestsum --junitfile $TEST_RESULTS/integration-report.xml --format testname -- \
+              -tags postgres \
+              -coverprofile=../integration-cover.out \
+              -covermode=atomic \
+              -coverpkg="$COVERPKG" \
+              ./...
+            cd -
+
+            head -n 1 root-cover.out > cover.out
+            tail -n +2 root-cover.out >> cover.out
+            tail -n +2 integration-cover.out >> cover.out
 
       - run:
           name: Running tests with statement caching enabled
