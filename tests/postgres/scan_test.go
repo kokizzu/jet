@@ -4,7 +4,7 @@ import (
 	"context"
 	"github.com/go-jet/jet/v2/internal/utils/ptr"
 	"github.com/lib/pq"
-	"github.com/volatiletech/null/v8"
+	"gopkg.in/guregu/null.v4"
 	"testing"
 	"time"
 

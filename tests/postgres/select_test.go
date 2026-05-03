@@ -5,11 +5,11 @@ import (
 	"database/sql"
 	"github.com/go-jet/jet/v2/internal/utils/ptr"
 	"github.com/lib/pq"
+	"gopkg.in/guregu/null.v4"
 	"testing"
 	"time"
 
 	"github.com/go-jet/jet/v2/qrm"
-	"gopkg.in/guregu/null.v4"
 
 	"github.com/stretchr/testify/require"
 
