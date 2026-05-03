@@ -1062,6 +1062,8 @@ LIMIT $38;
 }
 
 func TestUInt64Overflow(t *testing.T) {
+	skipForCockroachDB(t)
+
 	stmt := AllTypes.INSERT(AllTypes.BigInt).
 		VALUES(Uint64(math.MaxUint64))
 
@@ -1069,7 +1071,7 @@ func TestUInt64Overflow(t *testing.T) {
 	if isPgxDriver() {
 		require.ErrorContains(t, err, "18446744073709551615 is greater than maximum value for int64")
 	} else {
-		require.ErrorContains(t, err, "sql: converting argument $1 type: uint64 values with high bit set are not supported")
+		require.ErrorContains(t, err, "pq: value \"18446744073709551615\" is out of range for type bigint (22003)")
 	}
 }
 
@@ -2430,7 +2432,7 @@ var allTypesRow0 = model.AllTypes{
 	BitVarying:           "101111",
 	TsvectorPtr:          ptr.Of("'supernova':1"),
 	Tsvector:             "'supernova':1",
-	UUIDPtr:              testutils.UUIDPtr("a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11"),
+	UUIDPtr:              ptr.Of(uuid.MustParse("a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11")),
 	UUID:                 uuid.MustParse("a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11"),
 	XMLPtr:               ptr.Of("<Sub>abc</Sub>"),
 	XML:                  "<Sub>abc</Sub>",
