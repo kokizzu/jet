@@ -1126,8 +1126,8 @@ func TestScanToPrimitiveElementsSlice(t *testing.T) {
 // https://github.com/go-jet/jet/issues/127
 func TestValuerTypeDebugSQL(t *testing.T) {
 	type customer struct {
-		CustomerID null.Int32 `sql:"primary_key"`
-		StoreID    null.Int16
+		CustomerID null.Int `sql:"primary_key"`
+		StoreID    null.Int
 		FirstName  null.String
 		LastName   string
 		Email      null.String
@@ -1135,14 +1135,14 @@ func TestValuerTypeDebugSQL(t *testing.T) {
 		Activebool null.Bool
 		CreateDate null.Time
 		LastUpdate null.Time
-		Active     null.Int8
+		Active     null.Int
 	}
 
 	stmt := Customer.INSERT().
 		MODEL(
 			customer{
-				CustomerID: null.Int32From(1234),
-				StoreID:    null.Int16From(0),
+				CustomerID: null.IntFrom(1234),
+				StoreID:    null.IntFrom(0),
 				FirstName:  null.StringFrom("Joe"),
 				LastName:   "",
 				Email:      null.StringFromPtr(nil),
@@ -1150,7 +1150,7 @@ func TestValuerTypeDebugSQL(t *testing.T) {
 				Activebool: null.BoolFrom(true),
 				CreateDate: null.TimeFrom(time.Date(2020, 2, 2, 10, 0, 0, 0, time.UTC)),
 				LastUpdate: null.TimeFromPtr(nil),
-				Active:     null.Int8From(1),
+				Active:     null.IntFrom(1),
 			},
 		)
 
