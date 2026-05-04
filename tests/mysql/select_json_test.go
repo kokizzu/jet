@@ -505,3 +505,47 @@ func TestSelectJson_ProjectionNotAliased(t *testing.T) {
 		}, "jet: expression need to be aliased when used as SELECT JSON projection.")
 	})
 }
+
+func TestSelectJsonObject_EscapesJsonKeys(t *testing.T) {
+	stmt := SELECT_JSON_OBJ(
+		String("value").AS("author"),
+		String("value").AS("author's name"),
+		String("value").AS("author''s name"),
+		String("value").AS("author \"name\""),
+		String("value").AS(`C:\tmp\file`),
+		String("value").AS("hello\nworld"),
+		String("value").AS("a'b\\\\c\\nd\\r\\x00e\\x1af"),
+		String("value").AS("žika 😀"),
+	)
+
+	testutils.AssertDebugStatementSql(t, stmt, `
+SELECT JSON_OBJECT(
+          'author', 'value',
+          'author''s name', 'value',
+          'author''''s name', 'value',
+          'author "name"', 'value',
+          'C:\tmp\file', 'value',
+          'hello
+world', 'value',
+          'a''b\\c\nd\r\x00e\x1af', 'value',
+          'žika 😀', 'value'
+     ) AS "json";
+`)
+
+	var dest map[string]any
+
+	err := stmt.QueryContext(ctx, db, &dest)
+	require.NoError(t, err)
+	testutils.AssertJSON(t, dest, `
+{
+	"C:\tmpfile": "value",
+	"a'b\\c\nd\rx00ex1af": "value",
+	"author": "value",
+	"author \"name\"": "value",
+	"author''s name": "value",
+	"author's name": "value",
+	"hello\nworld": "value",
+	"žika 😀": "value"
+}
+`)
+}
