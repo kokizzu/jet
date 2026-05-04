@@ -956,3 +956,13 @@ world",
 }
 `)
 }
+
+func TestSelectJsonObject_NullMoreThanOneRow(t *testing.T) {
+	var dest map[string]any
+
+	_, err := qrm.QueryJsonObj(ctx, db, `
+SELECT NULL::json AS "json"
+UNION ALL
+SELECT NULL::json AS "json"`, nil, &dest)
+	require.ErrorContains(t, err, "jet: query returned more then one row")
+}
